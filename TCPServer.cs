@@ -2,6 +2,8 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace tcp_com
 {
@@ -9,6 +11,7 @@ namespace tcp_com
     {
         public TcpListener listener { get; set; }
         public bool acceptFlag { get; set; }
+
 
         public TCPServer(string ip, int port, bool start = false)
         {
@@ -39,8 +42,11 @@ namespace tcp_com
                         Console.WriteLine("Cliente conectado. Esperando datos");
                         var client = clientTask.Result;
                         string msg = "";
+                        DateTime now  = DateTime.Now;
+                        Message mensaje = new Message();
+                        
 
-                        while(msg != null && !msg.StartsWith("bye"))
+                        while(msg != null && !msg.Equals("bye"))
                         {
                             // Enviar un mensaje al cliente
                             byte[] data = Encoding.UTF8.GetBytes("Envía datos. Envía \"bye\" para terminar");
@@ -49,9 +55,11 @@ namespace tcp_com
                             // Escucha por nuevos mensajes
                             byte[] buffer = new byte[1024];
                             client.Receive(buffer);
+                            var uft8Reader = new Utf8JsonReader(buffer);
+                            mensaje = System.Text.Json.JsonSerializer.Deserialize<Message>(ref uft8Reader);
 
-                            msg = Encoding.UTF8.GetString(buffer);
-                            Console.WriteLine(msg);
+                            msg = mensaje.MessageString;
+                            Console.WriteLine(mensaje.Hour.Hour +":"+ mensaje.Hour.Minute + " "+mensaje.User+ "- "+ mensaje.MessageString);
                         }
                         Console.WriteLine("Cerrando conexión");
                         client.Dispose();

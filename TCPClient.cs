@@ -37,7 +37,7 @@ namespace tcp_com
                 try
                 {
                     string msg = Console.ReadLine();
-                    Message newMessage = new Message(msg, Username);
+                    Message newMessage = new Message(msg, Username, DateTime.Now);
                     string jsonMessage = JsonConvert.SerializeObject(newMessage);
 
                     // Envío de datos
