@@ -4,6 +4,7 @@ namespace tcp_com
 {
     public class Message
     {
+        public int id {get; set;}
         public string MessageString { get; set; }
         public string User { get; set; }
 
@@ -15,8 +16,9 @@ namespace tcp_com
             User = "Default";
         }
 
-        public Message(string messageString, string user,DateTime hour)
+        public Message(int id,string messageString, string user,DateTime hour)
         {
+            this.id = id;
             this.MessageString = messageString;
             this.User = user;
             this.Hour = hour;
